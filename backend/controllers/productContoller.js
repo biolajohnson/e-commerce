@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 //@description fetch all routes
 //get request, public
 export const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({});
+  const products = await Product.find();
   res.json(products);
 });
 
