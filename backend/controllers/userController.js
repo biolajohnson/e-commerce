@@ -38,6 +38,28 @@ const getUserProfile = asyncHandler(async (req, res) => {
     throw new Error("User not Found");
   }
 });
+
+//@description User Profile
+//get request, private/admin
+
+const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({});
+  res.json(users);
+});
+
+//@description User Profile
+//delete request, private/admin
+
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user) {
+    await user.remove();
+    res.json({ message: "User removed" });
+  } else {
+    throw new Error("No user to remove");
+  }
+});
+
 //@description update User Profile
 //put request, private
 
@@ -90,5 +112,45 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid user data");
   }
 });
+const updateUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
 
-export { authUser, getUserProfile, registerUser, updateUserProfile };
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = req.body.isAdmin;
+
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not Found");
+  }
+});
+//@description User Profile by ID
+//get request, private/admin
+
+const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error("User not Found");
+  }
+});
+export {
+  authUser,
+  getUserProfile,
+  registerUser,
+  updateUserProfile,
+  getUsers,
+  deleteUser,
+  updateUserById,
+  getUserById,
+};
