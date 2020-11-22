@@ -50,7 +50,7 @@ export const getOrderById = asyncHandler(async (req, res) => {
 
 //@description fetch order by Id (pay)
 //get request, private //paypal and paystack
-export const updateOrderById = asyncHandler(async (req, res) => {
+export const updateOrderToPaid = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
   //paypal
   if (order) {
@@ -70,9 +70,34 @@ export const updateOrderById = asyncHandler(async (req, res) => {
     throw new Error("Order not found");
   }
 });
+
 //@description: get my orders
 //@access private
 export const getMyOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({ user: req.user._id });
   res.json(orders);
+});
+
+//@description: get all orders
+//@access private/admin
+export const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate("user", "id name");
+  res.json(orders);
+});
+
+//@description: update order to delivered
+//@access: private/admin
+
+export const updateOrderToDelivered = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (order) {
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
 });
