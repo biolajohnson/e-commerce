@@ -11,9 +11,9 @@ const Meta = ({ title, description, keywords }) => {
   );
 };
 Meta.defaultProps = {
-  title: "Two sisters Farm",
-  description: "Buy food directly from farmers",
-  keywords: "farm, farmer, food, foodstuff",
+  title: "Looks Easy",
+  description: "Makes commerce easier",
+  keywords: "commerce, selling, buying",
 };
 
 export default Meta;
